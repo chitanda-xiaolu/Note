@@ -26,12 +26,6 @@ function heapSort(array) {
   return array
 }
 
-/**
- * 
- * @param {*} array 
- * @param {*} index 
- * @param {*} heapSize 
- */
 function adjustMaxHeap(array, index, heapSize) {
   /**
    * iMax用于存储最大值索引
@@ -63,6 +57,30 @@ function adjustMaxHeap(array, index, heapSize) {
      }
    }
  }
+
+// function adjustMaxHeap(array, index, heapSize) {
+//   let iMax = index,
+//   iLeft = 2 * index + 1,
+//   iRight = 2 * index + 2,
+//   heapSize = heapSize
+  
+//   // 如果左元素存在，且左子元素大于最大值，则更新最大值索引
+//   if(iLeft < heapSize && array[iMax] < array[iLeft]) {
+//     iMax = iLeft
+//   }
+
+//   // 如果右元素存在，且右子元素大于最大值，则更新最大值索引
+//   if(iRight < heapSize && array[iMax] < array[iRight]) {
+//     iMax = iRight
+//   }
+
+//   if(iMax !== index) {
+//     swap(array, index, iMax)
+//     index = iMax
+//     adjustMaxHeap(array, index, heapSize)
+//   }
+   
+// }
 
 // 构建大顶堆
 function buildMaxHeap(array) {
