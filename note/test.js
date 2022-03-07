@@ -1,5 +1,10 @@
-function foo({x, y = 5} = {}) {
-  console.log(x, y);
+function push(array, ...items) {
+  console.log(items)
+  items.forEach(function(item) {
+    array.push(item);
+    console.log(item);
+  });
 }
 
-foo({x: 1, y: 2}) // undefined 
+var a = [];
+push(a, 1, 2, 3)
