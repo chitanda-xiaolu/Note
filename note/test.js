@@ -21,3 +21,7 @@ Set-PSReadLineKeyHandler -Key UpArrow -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
     }
 clear
+
+
+https://zhuanlan.zhihu.com/p/137251716
+
