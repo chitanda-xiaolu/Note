@@ -6,7 +6,7 @@ function updateView() {
 // 重新定义数组原型
 const oldArrayProperty = Array.prototype
 // 创建新对象，原型指向oldArrayProperty,在扩展新的方法不会影响原型
-const arrProto = Object.create(oldArrayProperty)
+const arrProto = Object.create(oldArrayProperty);
 ['push', 'pop', 'shift', 'unshift', 'splice'].forEach(methodName => {
   arrProto[methodName] = function () {
     updateView() //更新视图
@@ -41,6 +41,10 @@ function observer(target) {
     return target
   }
 
+  if (Array.isArray(target)) {
+    target.__proto__=arrProto
+  }
+
   // 重新定义各个属性
   for(let key in target) {
     defineReactive(target, key, target[key])
@@ -68,3 +72,4 @@ observer(data)
 // console.log(data.name)
 
 data.nums.push(40)
+console.log(data.nums)
