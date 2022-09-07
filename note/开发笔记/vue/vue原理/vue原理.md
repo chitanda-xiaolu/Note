@@ -193,8 +193,10 @@ Vue主要通过以下4个步骤来实现数据双向绑定的：
 
 ```
 
-### vdom和diff
-
+### vdom(Virtual DOM)和diff
++ vdom是实现vue和React的重要基石
++ diff算法是vdom中最核心、最关键的部分
++ vdom - 用JS模拟DOM结构计算出最小的变成，操作DOM
 
 ### 模板编译
 
