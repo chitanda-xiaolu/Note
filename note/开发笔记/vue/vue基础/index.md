@@ -63,5 +63,89 @@
 + 监听数据必须是data中声明过或者父组件传递过来的props中的数据。当数据变化时触发其他操作，函数有连个参数：
 immediate: 组件加载立即触发回调函数执行；
 deep: 深度监听；为了发现对象内部的值发生变化，复杂类型的数据时使用，例如：数组中的对象内容的改变，**注意**
-监听数组的变动不需要这么做。注意:deep无法监听到数组的变动和对象的新增，参考vue数组变异，只有以响应式的方式
-才会被监听到
+监听数组的变动不需要这么做。注意:deep无法监听到数组的变动和对象的新增，参考vue数组变异，只有以响应式的方式才会被监听到；
+
+
+**注：当需要在数据变化时执行异步或开销较大的操作时，这个方式是最有用的，这是和computed最大的区别**
+
+**注意事项**
++ watch 中的函数名称必须是所依赖data中的属性名称；
++ watch 中的函数时不要调用的，只要函数所依赖的属性发生了变化那么相对应的函数就会执行；
++ watch 中的函数会有两个参数 一个是新值，一个是旧值；
++ watch 默认情况下无法监听对象的改变，如果需要进行监听则需要进行深度监听 深度监听需要配置handler函数及deep为true。(因为它只会监听对象的地址是否发生了改变，而值是不会监听的)
++ watch 默认情况第一次的时候不会去做监听，如果需要在第一次加载的时候也要去做监听的话需要设置immediate:true
++ watch在特殊情况下是无法监听到数组的变化：
+通过下标来改变数组中的数据
+通过length来改变数组长度
+```js
+  通过 Vue 实例方法 set 进行设置 $set( target, propertyName/index, value);
+  参数：target {Object | Array} ， propertyName/index {string | number}， value {any}
+
+  this.$set(this.arr,0,100);
+
+
+  通过 splice 来数组清空 $delete( target, propertyName/index )
+  参数：target {Object | Array} ， propertyName/index {string | number}
+
+  this.$delete(this.arr,0)
+```
+
+#### Class与Style绑定
+**对象语法**
+绑定的类名为属性名
+```html
+  <div
+  class="static"
+  v-bind:class="{ active: isActive, 'text-danger': hasError }"
+  ></div>
+```
+
+```js
+  data: {
+    isActive: true,
+    hasError: false
+  }
+```
+
+```html
+  <div v-bind:class="classObject"></div>
+```
+
+```js
+  data: {
+    classObject: {
+      active: true,
+      'text-danger': false
+    }
+  },
+  computed: {
+  classObject: function () {
+    return {
+      active: this.isActive && !this.error,
+      'text-danger': this.error && this.error.type === 'fatal'
+      }
+    }
+  }
+```
+
+**数组语法**
+```html
+  <div v-bind:class="[activeClass, errorClass]"></div>
+```
+
+```js
+  data: {
+    activeClass: 'active',
+    errorClass: 'text-danger'
+  }
+```
+渲染为:
+```html
+  <div class="active text-danger"></div>
+```
+
+如果你也想根据条件切换列表中的class，可以用三元表达式：
+```html
+  <div v-bind:class="[isActive ? activeClass : '', errorClass]"></div>
+
+```
