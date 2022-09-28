@@ -166,3 +166,53 @@ deep: 深度监听；为了发现对象内部的值发生变化，复杂类型�
 #### v-for
 v-for列表循环中使用key的作用:
 用唯一标识标记每一个节点，可以高效渲染虚拟DOM树。
+
+#### vue事件修饰符
++ 1. prevent: 阻止默认事件(常用)
++ 2. stop: 阻止事件冒泡(常用)
++ 3. once: 事件只触发一次(常用)
++ 4. capture: 使用时间的捕获模式(时间被捕获时调用回调)
++ 5. self: 只有evevt.target是当前操作的元素时才触发
++ 6. passive: 事件的默认行为立即执行，无需等待事件回调执行完毕 
+
+#### vue键盘时间
+js dom 常用键盘事件: keyup keydown
++ 1. vue中常用的的按键别名
+回车 => enter
+删除 => delete (捕获退格和删除键)
+退出 => esc
+空格 => space
+换行 => tab（必须配合keydown使用）
+上 => up
+下 => down
+左 => left
+右 => right
+
+```js
+  <input type="text" placehoder="按下回车提示输入" @keyup.enter="showInfo">
+
+  methods: {
+    showInfo(e) {
+      console.log(e.target.value)
+    }
+  }
+```
+
++ 2.Vue未提供别名的案件，可以使用按键原始的Key值去绑定，但注意要转为小写且单词之间使用_连接
+例如：大小写切换键键名为CapsLock,需要转换为caps-lock进行时间绑定
+```js
+  <input type="text" placehoder="按下回车提示输入" @keyup.caps-lock="showInfo">
+
+  methods: {
+    showInfo(e) {
+      console.log(e.target.value)
+    }
+  }
+```
+
++ 3.系统修饰键(用法特殊):ctrl、alt、shift、mate
+(1) 配合keyup使用：按下修饰键的同时，再按下其他键，随后释放其他键，时间才被促发。
+(2) 配合keydown使用：正常触发事件
+
++ 4.也可以使用keyCode去指定具体的按键(不推荐)
++ 5.Vue.config.keyCodes.自定义键名 = 键码， 可以去定制按键别名
