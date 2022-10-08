@@ -4,6 +4,19 @@
 计算属性可以设置get() 和 set()
 
 #### 监听属性watch
+1. 当被监听的属性发生变化时，回调函数自动调用，进行相关操作
+2. 监听的属性必须存在，才能进行监视
+3. 监听的两种写法：
+  (1) vew Vue时传入watch配置
+  (2) 通过vm.$watch
+  ```js
+    vm.$watch('data', {
+      handler (newVal, oldVal) {
+        console.log('data', newVal, oldVal)
+      }
+    })
+  ```
+4. 当监听属性是对象时需要需要进行深度监听
 ```js
   <template>
     <div>
@@ -28,6 +41,11 @@
         name (newVal, oldVal) {
           console.log('name', newVal, oldVal)
         },
+        /**
+         * #深度监听
+         * (1). Vue中的watch默认不监测对象内部值的改变
+         * (2). 配置deep:true 可以监测对象内部值改变
+         */
         info: {
           handler (newVal, oldVal) {
             console.log('info', newVal, oldVal)
@@ -150,7 +168,11 @@ deep: 深度监听；为了发现对象内部的值发生变化，复杂类型�
 
 ```
 
+<<<<<<< Updated upstream
 #### v-if v-show
+=======
+#### v-if和v-show
+>>>>>>> Stashed changes
 **区别:**
 
 1、v-if在条件切换时，会对标签进行适当的创建和销毁，而v-show则仅在初始化时加载一次，因此v-if的开销相对来说会比v-show大。
@@ -216,3 +238,4 @@ js dom 常用键盘事件: keyup keydown
 
 + 4.也可以使用keyCode去指定具体的按键(不推荐)
 + 5.Vue.config.keyCodes.自定义键名 = 键码， 可以去定制按键别名
+
