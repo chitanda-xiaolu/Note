@@ -314,3 +314,44 @@ js dom 常用键盘事件: keyup keydown
 + 4.也可以使用keyCode去指定具体的按键(不推荐)
 + 5.Vue.config.keyCodes.自定义键名 = 键码， 可以去定制按键别名
 
+
+#### vue监视数据的原理
+1. vue会监视data中所有层次的数据。
+2. 如果监测对象中的数据？
+通过setter实现监视，且要在new Vue时就传入要监测的数据。
+(1) 对象中后追加的属性，Vue默认不做响应式处理
+(2) 如需给后添加的属性做响应式，使用如下方法
+    ```js
+    Vue.set(target, propertyName/index, value)
+    vm.$set(target, propertyName/index, value)
+    ```
+3. 如何监测数组中的数据？
+通过setter实现监视，且要new Vue是就传入要监视的数据。
+(1) 调用原生对应的方法对数组进行更新。
+(2) 重新解析模板，进而更新页面。
+
+4. 在Vue修改数组中的某个元素一定要用如下方法：
+(1) 使用这些API：push()、pop()、shift()、unshift()、splice()、sort()、reverse()
+(2) Vue.set()或vm.$set()
+
+特别注意: Vue.set()和vm.$set()不能给vm或vm的根数据对象(data) 添加属性
+
+#### vue收集表单数据
+```html
+  <input type="text"/>, 则v-model收集的是value值，用户输入的就是value值
+  <input type="radio"/>, 则v-model收集的是value值，且要给标签配置value值
+  <input type="checkbox"/>
+  1. 没有配置input的value属性，那么收集的就是checked(勾选or未勾选，是布尔值)
+  2. 配置input的value属性:
+  (1) v-model的初始值是非数组，那么收集的就是checked(勾选or未勾选，是布尔值)
+  (2) v-model的初始值是数组，那么收集的就是value组成的数组
+  备注: v-model的三个修饰符：
+  lazy: 失去焦点再收集数据
+  number: 输入字符串转为有效的数字
+  trim: 输入首位空格过滤
+```
+
+#### vue过滤器
+
+
+
