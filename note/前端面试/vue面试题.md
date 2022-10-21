@@ -63,6 +63,7 @@ Vue声明周期是指vue实例对象从创建之初到销毁的过程。
 ```js
   destroyed() {
     // vm中多有的data、methods、指令都不可用
+    // 销毁后自定义事件会失效，但原生DOM事件依然有效
   }
 ```
 
@@ -108,8 +109,8 @@ destroyed：这个时候所有的 data 和 methods，指令，过滤器…都是
 + View是试图层，也就是用户界面。前端主要由HTML和CSS构成。
 + Model是指数据模型，泛指后端进行的各种业务逻辑处理和数据操控，主要围绕数据库系统展现。
 + ViewModel由前端开发人员组织生成和维护的视图数据层。在这一层，前端开发者从后端获取
-得到Model数据进行转换出来，做二次封装，以生成符合View层使用预期的视图数据模型。视图状
-态和行为都封装在ViewModel里。这样的封装使得ViewModel可以完整地去描述View层。
+  得到Model数据进行转换出来，做二次封装，以生成符合View层使用预期的视图数据模型。视图状
+  态和行为都封装在ViewModel里。这样的封装使得ViewModel可以完整地去描述View层。
 #### 2.vue-router是什么？它有哪些组件
 是vue的一个路由插件，router-link router-view
 #### 3.active-class是哪些组件的属性？

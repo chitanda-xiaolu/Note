@@ -80,6 +80,10 @@
 
        (3) update 指令所在模板结构被重新解析时调用
 
+    3. 指令定义时不加v-，但使用时要加v-
+
+    4. 指令名称如果是多个单词，要使用kebab-case命名方式，不要用camelCase命名。
+
 #### 计算属性computed
 计算属性可以设置get() 和 set()
 
@@ -167,9 +171,13 @@
 ```
 
 5. **在vue中函数的使用有两个原则**
+
 6. 所有被vue管理的函数，最好写成普通函数，这样this的指向才是vm(vue实例或组件实例对象)
-7. 所有不被vue管理的函数(定时器的回调函数、ajax的回调函数等、promise的回调函数)，最好改写成回调函数，
-  这样this的指向才是vm或数组实例对象。也可以使用变量_this指向this。
+
+7. 所有不被vue管理的函数(定时器的回调函数、ajax的回调函数等、promise的回调函数)，最好改写成箭头函数，这样this的指向才是vm或数组实例对象。也可以使用变量_this指向this。
+
+  **注：箭头函数指向最近作用域的this，如果最近作用域没有this再向外一层一层的找，直到找到最近作用域**
+
 ```js
   <script>
     export default {
@@ -185,7 +193,7 @@
         fullName () {
           return this.firstName + ' ' + this.lastName
         }
-        // 错误写法
+        // 错误写法 this会指向window
         fullName: () => {
           return this.firstName + ' ' + this.lastName
         }
@@ -193,7 +201,7 @@
       watch: {
         // 错误写法
         address (newVal, oldVal) {
-          // 定时器为异步操作，回调函数使用普通函数时this指向全局即windose
+          // 定时器为异步操作，回调函数使用普通函数时this指向全局即window
           setTimeout(function() {
             console.log(this.address)
           },1000)
@@ -442,3 +450,93 @@ js dom 常用键盘事件: keyup keydown
 
 1. 过滤器也可以接收额外参数、多个过滤器也可以串联
 2. 并没有改变原本的数据，是产生新的对应数据
+
+#### vue生命周期
+
+1. 又名：生命周期回调函数、声明周期函数、生命周期钩子。
+2. 是什么：Vue在关键时刻帮我调用的一些特殊名称的函数。
+3. 生命周期函数的名称不可更改，但函数的具体内容是程序员根据需求编写的。
+4. 声明周期函数中的this指向vm或组件实例对象。
+
+
+
+#### 组件
+
+定义：实现应用中局部功能代码和资源的集合
+
+作用：服用编码，简化项目编码，提高运行效率
+
+关于组件名：
+
+1. 一个单词组成：第一种写法(首字母小写)header; 第二种(首字母大写)Header
+2. 多个单词组成：第一种写法(kebab-case命名)user-info;第二种写法(CamelCase命名)User-info
+
+关于组件标签：
+
+1. 第一种写法:<school></school>
+2. 第二种写法:<school/> 不适用脚手架时，<school/>会导致后续组件不能渲染
+
+
+
+关于VueComponent:
+
+1. Vue组件本质是一个名为VueComponent的构造函数，且不是程序员定义的，是Vue.extend生成的。
+2. 我们只需要写<school></school>或<school/>，Vue解析时会帮我们创建组件的实例对象，即Vue帮我们执行的：new VueComponent(options)。
+
+
+
+#### 原型链prototype(显式原型)和\_\_proto\_\_(隐式原型)
+
++ \_\_proto\_\_(隐式原型)是所有对象都有的(包括函数)
++ 普通对象的\_\_proto\_\_指向创建该实例的构造函数的原型对象
++ prototype原型对象里的constructor指向构造函数本身
++ \_\_proto\_\_和prototype都指向原型对象
+
+![https://pic2.zhimg.com/80/v2-e722d5325f7d4215169f1d04296e0f89_720w.webp]()
+
+```js
+// 定义一个构造函数
+function Demo() {
+  this.a = 1
+  this.b = 2
+}
+
+// 创建一个Demo的实例对象
+// 构造函数在创建对象时，将自己的显示原型属性赋值给对象的隐式原型属性
+const d = new Demo()
+
+console.log(Demo.prototype) // 显示原型属性
+console.log(d.__proto__) // 隐式原型属性
+
+// 通过显示原型属性操作原型对象，追加一个x属性，值为99
+Depo.prototype.x = 99 
+
+console.log(d.x) // 99
+```
+
+实例的隐式原型属性永远指向自己缔造者的原型对象
+
+
+
+#### 组件构造函数VueComponent 和Vue的关系
+
+VueComponent.prototype.\_\_proto\_\_ === Vue.prototype（vue组件构造函数）
+
+为什么要有这个关系：让组件实力对象(vc)可以访问到Vue原型上的属性、方法。
+
+
+
+####  render函数
+
+1. vue.js与vue.runtime.xxx.js的区别：
+
+   (1) vue.js是完整版的Vue，包含:核心功能+模板解析器
+
+   (2) vue.runtime.xxx.js是运行版的Vue，只包含：核心功能：没有模板解析器。
+
+2. 因为vue.runtime.xxx.js没有模板解析器，所有不能使用template配置项，需要使用render函数接收到createElement函数去指定具体内容。
+
+
+
+
+
