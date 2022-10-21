@@ -538,5 +538,11 @@ VueComponent.prototype.\_\_proto\_\_ === Vue.prototype（vue组件构造函数�
 
 
 
+#### 脚手架文件结构：
+
+
+
+
+
 
 
