@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 #### 插值、指令、动态属性、表达式
 
 + **指令**
@@ -537,8 +541,50 @@ VueComponent.prototype.\_\_proto\_\_ === Vue.prototype（vue组件构造函数�
 2. 因为vue.runtime.xxx.js没有模板解析器，所有不能使用template配置项，需要使用render函数接收到createElement函数去指定具体内容。
 
 
-
 #### 脚手架文件结构：
+
+```tree
+|---node_modules
+|---public
+|   |---favicon.ico: 页标图标
+|	|___index.html: 主页面
+|---src
+|   |---assets：存放静态资源
+|   |   |___logo.pbg
+|   |---component: 存放组件
+|	|---|___Helloworld.vue
+|	|---App.vue：汇总所有组件
+|	|---main.js：入口文件
+|--- .gitignore：git版本管制忽略的配置
+|--- babel.config.js：babel的配置文件
+|--- package.json：应用跑配置文件
+|--- README.md：应用描述文件
+|--- pacakge-lock.json：包版本控制文件
+```
+
+#### 关于不同版本的Vue:
+
++ vue.js与vue.runtime.xxx.js的区别：
+
+  （1）vue.js最完整的Vue，包含：核心功能+模板解析器
+
+  （2）vue.runtime.xxx.js是运行版本的Vue，只包含：核心功能；没有模板解析器。
+
++ 因为vue.runtime.xxx.js没有模板解析器，所以不能使用template配置项，需要使用render函数接收到的createElement函数去指定特定内容。
+
+#### ref属性
+
+1. 被用来给元素或子组件注册引用信息
+
+2. 应用在html标签上获取的真是DOM元素，应用在组件标签上是组件实例对象
+
+3. 使用方式：
+
+   打标识：<h1 ref="xxx">...</h1> 或 <header ref="xxx"></header>
+
+   获取：this.$refs.xxx
+
+
 
 
 
