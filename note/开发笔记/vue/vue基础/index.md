@@ -586,6 +586,107 @@ VueComponent.prototype.\_\_proto\_\_ === Vue.prototype（vue组件构造函数�
 
 
 
+#### props
+
+功能：让组件接收外部传过来的数据(即父组件向子组件传值)
+
+(1) 传递数据：
+
+```html
+<Sidebar name="xxx" :index="1">
+```
+
+(2) 接收数据：
+
+```js
+// 方式一
+props: ['name', 'index']
+
+// 方式二（限制类型）
+props:{
+  name: String,
+  index: Number
+}
+
+// 方式三（限制类型、限制必要性、指定默认值）
+props:{
+  name:{
+    type:String,
+    required:true,
+    default:'item'   
+  }
+}
+```
+
+props是只读的，Vue底层会监测你对props的修改，如果进行了修改，就会发出警告，若业务需求确实需要修改，如果进行了修改，就会发出警告，若业务确实需要修改，那么请复制props的内容到data中一份，然后去修改data中的数据。
+
+
+
+#### mixin(混入)
+
+可以把多个组件共用的配置提取成一个混入对象
+
+使用方式:
+
+```js
+// 第一步定义混个，例如:
+{
+  data() {
+    return {....}
+  },
+  methods: {....}
+}
+
+// 第二步使用混入，例如
+/*
+（1）全局混入：Vue.mixin(xxx)
+（2）局部混入：mixins:['xxx'] 
+*/
+import xxx from ....
+//全局混入：Vue.mixin(xxx)
+Vue.mixin(xxx)
+//局部混入：mixins:['xxx'] 
+mixins:['xxx']
+
+
+```
+
+#### 插件
+
+用于增强Vue
+
+本质：包含install方法的一个对象，install的第一个参数是Vue，第二个以后的参数是插件使用者传递的数据。
+
+定义插件:
+
+```js
+// plugins.js
+export default {
+  install(Vue, x, y, z) {
+    // 添加全局过滤器
+    Vue.filter(....)
+
+    // 添加全局指令
+    Vue.directive(....)
+
+    // 配置全局混入
+    Vue.mixin(....)
+
+    // 添加实例方法
+    Vue.prototype.$myMethod = function () {...}
+    Vue.prototype.$myProperty = xxxx
+  }
+}
+  
+// 使用插件:
+ import plugins from './plugins'
+ Vue.use(plugins)
+```
+
+
+
+
+
 
 
 
