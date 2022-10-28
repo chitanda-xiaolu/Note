@@ -614,6 +614,10 @@ props:{
     type:String,
     required:true,
     default:'item'   
+  },
+  index:{
+    type:Number,
+    required:true,  
   }
 }
 ```
