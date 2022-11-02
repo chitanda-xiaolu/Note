@@ -639,7 +639,7 @@ props适用于:
 使用方式:
 
 ```js
-// 第一步定义混个，例如:
+// 第一步定义混入例如:
 {
   data() {
     return {....}
@@ -693,6 +693,131 @@ export default {
  Vue.use(plugins)
 ```
 
+#### webStorage
+
+1. 存储内容大小一般5M左右(不同的浏览器可能不一样)
+2. 浏览器端通过Window.sessionStorage和Window.loacalStorage属性来实现本地存储机制
+3. 相关API：
+   + xxxxStorage.setItem('key',  'value') 这个方法接收一个键和值作为参数，会把键值对添加到存储中，如果键名存在，则更新其对应的值。
+   + xxxxStorage.getItem('key_name') 这个方法接受一个键名作为参数，并把键名从存储中删除。
+   + xxxxStorage.clear() 这个方法会清空存储中的所有数据。
+4. 备注：
+   + sessionStorage存储的内容会随着浏览器窗口关闭而消失。
+   + LocalStorage存储的内容，需要手动清楚才会消失。
+   + xxxxStorage.getItem(xxx)如果xxx对应的value获取不到，那个getItem的返回值是null。
+   + JSON.parse(null)的结果依然是null。JSON.stringify()可以将JavaScript对象转换成JSON字符串。
+
+
+
+#### 组件的自定义事件
+
+1. 一种组件间通信的方式，适用于：<font color='red'>子组件===>父组件</font>
+
+2. 使用场景：A是父组件，B是子组件，B想给A传递数据，那么就要在A中给B绑定自定义事件(事件的回调函数在A中)
+
+3. 绑定自定义事件：
+
+   + 以属性绑定的形式给子组件绑定自定义事件：<child @customFun="callBackFunction"> 或 <child  v-on:trigger="callBackFunction">
+
+     Demo.vue
+
+     ```html
+     <Demo>
+       <!--
+     	使用v-on(@)给子组件绑定自定义事件
+     	并给自定义事件指定回调函数
+     	-->
+       <!-- 方式一 绑定自定义事件 -->
+       <child @customFun="callBackFunction" />
+       <!-- 方式二 通过操作dom触发自定义事件 -->
+       <child ref="child" />
+     </Demo>
+     ```
+
+     ```js
+     export default {
+       methods: {
+         callBackFunction() {
+           console.log("child触发了callBackFunction")
+         }
+       },
+       mounted() {
+         this.$refs.student.$on('customFun', this.callBackFunction)
+       }
+     }
+     ```
+
+     Child.vue
+
+     ```html
+     <button @click="trigger"></button>
+     ```
+
+     ​
+
+     ```js
+     export default {
+       name: Child,
+       methods: {
+         trigger() {
+           this.$emit('customFun', prams)
+         }
+       }
+     }
+     ```
+
+     ​
+
+   + 第二种方式，在父组件中：
+
+     ```js
+     <Demo ref="demo">
+
+     ```
+
+4. 触发自定义事件：this.$emit('customFun', 需要传递的参数)
+
+5. 解绑自定义事件this.$off('customFun')
+
+6. 组件上也可以绑定原生DOM事件，需要使用native修饰符。
+
+7. 注意：通过this.\$refs.xxx.\$on('customFun', 回调函数)，回调函数要么配置在methods中，要么用箭头函数，否则this指向会出问题。
+
+
+
+
+#### 全局事件总线（GlobalEventBus）
+
+1. 一种组件间通信的方式，适用于任意组件间通信。
+
+2. 配置全局事件总线：
+
+   ```js
+   new Vue({
+     ......
+     beforeCreate() {
+     	Vue.prototype.$bus = this // 配置全局事件总线，$bus就是当前应用的vm实例
+     }
+   })
+   ```
+
+3. 使用事件总线：
+
+   + 接收数据：A组件想接收数据，则在A组件中给$bus绑定自定义事件，事件的回调函数留在A组件自身。（接收数据的组件绑定总线事件）
+
+     ```js
+     methods() {
+       demo(data) {.....}
+     }
+     .....
+     mounted() {
+       this.$bus.$on('xxxx', this.demo)
+     }
+     ```
+
+   + 提供数据（发送数据的组件触发总线事件）：this.\$bus.\$emit('xxxx', 数据)
+
+4. 最好在beforeDestroy钩子中，用$off去解绑当前组件所用到的时间。
 
 
 
