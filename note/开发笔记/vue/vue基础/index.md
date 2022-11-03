@@ -711,7 +711,7 @@ export default {
 
 #### 组件的自定义事件
 
-1. 一种组件间通信的方式，适用于：<font color='red'>子组件===>父组件</font>
+1. 一种组件间通信的方式，适用于：**子组件 ===\> 父组件**
 
 2. 使用场景：A是父组件，B是子组件，B想给A传递数据，那么就要在A中给B绑定自定义事件(事件的回调函数在A中)
 
@@ -737,7 +737,8 @@ export default {
      ```js
      export default {
        methods: {
-         callBackFunction() {
+         callBackFunction(prams) {
+           console.log(prams)
            console.log("child触发了callBackFunction")
          }
        },
@@ -818,6 +819,53 @@ export default {
    + 提供数据（发送数据的组件触发总线事件）：this.\$bus.\$emit('xxxx', 数据)
 
 4. 最好在beforeDestroy钩子中，用$off去解绑当前组件所用到的时间。
+
+
+
+#### 消息订阅与发布(pubsub)
+
+1. 一种组件通信的方式，适用于任意组件通信。
+
+2. 使用步骤：
+
+   + 安装pubsub：```npm i pubsub-js```
+   + 引入：```import pubsub from 'pubsub-js'```
+   + 接收数据：A组件想接收数据，则在A组件中订阅消息，订阅的回调留在A组件自身。
+
+   ```js
+   methods() {
+     demo(data) {.....}
+   }
+   ......
+   mounted() {
+     this.pid = pubsub.publish('xxx', this.demo) // 订阅消息
+   }
+   ```
+
+   + 提供数据: ```pubsub.publish('xxx', this.demo)```
+   + 最好在beforeDestroy钩子中，用PubSub.unsubscribe(pid)去取消订阅<span style="color:red">取消订阅。</span>
+
+
+#### $nextTick()
+
+1. 语法：```this.$nextTick(回调函数)```
+2. 作用：在下一次DOM更新结束后才执行其指定的回调函数。
+3. 什么时候用：当改变数据后，要基于更新后的新DOM进行某些操作时，要在nextTick所指定的回调函数中执行。
+
+#### Vue封装的过渡与动画
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
