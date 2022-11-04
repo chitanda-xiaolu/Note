@@ -856,6 +856,56 @@ export default {
 
 
 
+#### Vue脚手架配置代理
+
++ **方法一**
+
+  在vue.config.js中添加如下配置：
+
+  ```js
+  devServer: {
+    proxy: "http://localhost:5000"
+  }
+
+  ```
+
+  1. 优点：配置简单
+  2. 缺点：不能配置多个代理，不能灵活控制请求是否走代理。
+  3. 工作方式：若按照上述配置代理，当请求了前端不存在资源时，那么该请求会转发给服务器(优先匹配前端资源)
+
++ 方法二
+
+  编写vue.config.js配置具体代理规则
+
+  ```js
+  module.exports = {
+    devServer: {
+      proxy:｛
+        '/api1': {
+           target: 'http://localhost:5000', //代理目标的基础路径
+           changeOrigin: true,
+    	  },
+        'api2': {
+  	   target: 'http://localhost:5001', //代理目标的基础路径
+         changeOrigin: true,
+         pathRewrite: {'^/api2':''}
+        }
+      ｝
+    }
+  }
+  /*
+  changeOrigin设置为true时，服务器收到请求头中的host为:localhost:5000
+  changeOrigin设置为false时，服务器收到的请求头中的host为:localhost:8080
+  changeOrigin默认值为true
+  */
+  ```
+
+  ​
+
+  ​
+
+
+
 
 
 
