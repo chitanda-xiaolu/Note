@@ -900,7 +900,95 @@ export default {
   */
   ```
 
-  ​
+  #### 插槽
+
+  1. 作用：让父组件可以向组件指定位置插图html结构，也是一种组件间的通信方法，适用于父组件===>子组件
+
+  2. 分类：默认插槽、具名插槽、作用域插槽
+
+  3. 使用方式
+
+     + 默认插槽
+
+       ```html
+       父组件中：
+       <Category>
+         <div>html结构</div>
+       </Category>
+       子组件中(Category)：
+       <template>
+         <!--定义插槽-->
+         <slot>插槽默认内容</slot>
+       </template>
+
+       ```
+
+       ​
+
+     + 具名插槽
+
+       ```html
+       父组件中:
+       <Category>
+         <template slot="center">
+           <div>html结构1</div>
+         </template>
+         
+         <template v-solot:footer>
+           <div>html结构1</div>
+         </template>
+       </Category>
+
+       子组件中(Category)：
+       <template>
+         <!--第一插槽-->
+         <slot name="center">插槽默认内容</slot>
+         <slot name="footer">插槽默认内容</slot>
+       </template>
+       ```
+
+     + 作用域插槽
+
+       数据在组件的自身，但数据生成需要组件的使用者来决定
+
+       ```html
+       父组件中：
+       <Category>
+         <template scope="scopeData">
+           <ul>
+             <li v-for="g in scopeData.games" :key="g">{{ g }}</li>
+           </ul>
+         </template>
+       </Category>
+
+       <Category>
+         <template slot-scope="scopeData">
+           <h4 v-for="g in scopeData.games" :key="g">{{ g }}</h4>
+         </template>
+       </Category>
+
+       子组件中：
+       <template>
+         <div>
+           <slot :games="games">
+         </div>
+       </template>
+       <script>
+         export default {
+           name: 'Category',
+           props: ['title']
+           data() {
+             return {
+       		games: ['地平线', 'honkai impact']
+             }
+         	}
+         }  
+       </script>
+       ```
+
+       ​
+
+  #### vuex
 
   ​
 
