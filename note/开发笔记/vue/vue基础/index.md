@@ -990,6 +990,17 @@ export default {
 
   #### vuex
 
+  可以简单把vuex理解成一个全局的data，vuex有几个比较核心个概念：State、Getters、Mutation、Action
+
+  Module。![](https://vuex.vuejs.org/vuex.png)
+
+  ​
+
+  + State用于存放全局data
+  + Getters相当于组件间可以共享的
+  + Mutation用于修改全局data，有Commit触发，无法进行异步操作
+  + Action无法直接修改全局data，由dispatch触发，可进行异步操作
+
   **四个map方法的使用**
 
   + mapState方法：用于帮助我们映射state中的数据为计算属性
@@ -1000,6 +1011,7 @@ export default {
     ...mapState(sum: 'sum', school: 'school', subject: 'subject')
     
     // 借助mapState生成计算属性，sum、school、subject（数组写法）
+    ...mapState('sum')
   }
 
   ```
@@ -1016,15 +1028,33 @@ export default {
   }
   ```
 
-  ​
-
-  + ​
+  + mapActions方法：用于帮助我们生成与actions对话的方法，即包含$store.dispatch(xxx)的函数
 
   ```js
+  methods: {
+    // 靠mapActions生成：incrementOdd（对象形式）
+    ...mapActions({incrementOdd:'sumOdd'})
+    
+    // 靠mapActions生成，incrementOdd（数组形式）
+    ...mapActions(['sumOdd'])
+  }
 
   ```
 
+  ​
 
+  + mapMutations方法：用于帮助我们生成与mutations对话的方法，即：包含$store.commit(xxx)的函数
+
+  ```js
+  methods: {
+    // 靠mapMutations生成，increment（对象形式）
+    ...mapMutations({increment: 'increament'})
+    
+    // 数组形式
+    ...mapMutations(['increment'])
+  }
+
+  ```
 
 
 
