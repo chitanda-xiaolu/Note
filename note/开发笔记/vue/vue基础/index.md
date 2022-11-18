@@ -1058,83 +1058,203 @@ export default {
   ```
 
 
-**模块化 命名空间**
+  **模块化 命名空间**
 
-目的：让代码更好维护，让多种数据分类更加明确
+  目的：让代码更好维护，让多种数据分类更加明确
 
-```js
-const countAbout = {
-  namespaced:true, //开启命名空间
-  state: {x:1},
-  mutations: { ... },
-  actions: { ... },
-  getters: { 
-    bigsum(state){
-      return state.sum * 10
+  ```js
+  const countAbout = {
+    namespaced:true, //开启命名空间
+    state: {x:1},
+    mutations: { ... },
+    actions: { ... },
+    getters: { 
+      bigsum(state){
+        return state.sum * 10
+      }
     }
   }
-}
-              
-const personAbout = {
-  namespaced: true, //开启命名空间
-  state: { ... },
-  mutations: { ... },
-  actions: { ... }
-}
-
-const store = new Vuex.Store({
-   modules: {
-      countAbout,
-      personAbout
+                
+  const personAbout = {
+    namespaced: true, //开启命名空间
+    state: { ... },
+    mutations: { ... },
+    actions: { ... }
   }
-})
-```
 
-开启命名空间后，组件读取state数据：
+  const store = new Vuex.Store({
+     modules: {
+        countAbout,
+        personAbout
+    }
+  })
+  ```
+
+  开启命名空间后，组件读取state数据：
+
+  ```js
+  // 方式一：自己直读取
+  this.$store.state.personAbout.list
+
+  // 方式二：借助mapState读取
+  ...mapGetters('countAbout', ['bigSum'])
+  ```
+
+  开启命名空间后，组件中读取getters数据：
+
+  ```js
+  // 方式一：自己直接读取
+  this.$store.getters['personAbout/firstPersonName']
+
+  // 方式二：借助mapGetters读取
+  ...mapGetters('CountAbout', ['bigSum'])
+  ```
+
+  开启命名空间后，组件中调用dispatch
+
+  ```js
+  // 方式一：自己直接dispatch
+  this.$store.dispatch('personAbout/addPerson', person)
+
+  // 方法二：借助mapActions
+  ...mapActions('countAbout', ['bigSum'])
+  ```
+
+  开启命名空间后，组件中调用commit
+
+  ```js
+  // 方式一：自己直接commit
+  this.$store.commit('personAbout/addPerson', person)
+
+  // 方式二：借助mapMutations
+  ...mapMutations('countAbout', {increament: 'JIA', decrement: 'JIAN'})
+
+  ```
+
+
+
+#### vue-router
+
+$route当前组件的路由
+
+$router单页应用的所有路由
+
+路由切换组件会伴随组件声明周期
+
++ query传参
+
+1. 作用：可以简化路由的跳转
+
+2. 如何使用
+
+   - 给路由命名：
+
+     ```js
+     {
+     	path: '/demo',
+        	component: Demo,
+         children: [
+         	path: 'test',
+           	component: Test,
+           children: [
+             {
+               name: 'hello' // 给路由命名
+               path: 'welcome',
+               component: Hello
+             }
+           ]
+         ]
+     }
+     ```
+
+     ​
+
+   - 简化跳转
+
+     ```html
+     <!--简化前，需要些完成的路径-->
+     <router-link to="/demo/test/welcome">跳转</router-link>
+
+     <!--简化后，直接通过名字跳转-->
+     <router-link to="/demo/test/welcome">跳转</router-link>
+
+     <!--简化写法配合传递参数-->
+     <router-link 
+         :to="{
+         	name: 'hello',
+             query: {
+            		name: 'hello'
+                 query:｛
+              		name: "chitanda"
+              	｝
+             }
+         }"
+     >跳转</router-link>
+
+     ```
+
+
+
++ params参数
+
+  配置路由，声明接收params参数
+
+  ```js
+  {
+    path: '/home',
+    component: Home,
+    children: [
+      {
+        path: 'news',
+        component:Message,
+        children: [
+          name: 'detail',
+          path: 'detail/:id/:title', // 使用title占位符声明接收params参数
+          component: Detail
+        ]
+      }    
+    ]
+
+  }
+  ```
+
+  传递参数
+
+  ```html
+  <!--跳转并携带params参数，to的字符串写法-->
+  <router-link :to="/home/message/detail/233/haha">跳转</router-link>
+
+  <!--跳转并携带params参数，to的字符串写法-->
+  <router-link :to="/home/message/detail/233/haha">跳转</router-link>
+  ```
+
+  路由携带params参数时，若使用to的对象写法，则不能使用path配置项，必须使用name配置
+
++ props
+
+  作用：让路由组件更方便的收到参数
 
 ```js
-// 方式一：自己直读取
-this.$store.state.personAbout.list
-
-// 方式二：借助mapState读取
-...mapGetters('countAbout', ['bigSum'])
+{
+  name: 'detail',
+  path: 'detail/:id', 
+  component: Detail,
+    
+  // 第一种写法：props值为对象，该对象中所有的key-value的最终组合都会通过props传递给Detail组件
+  // props: {a:900}
+  
+  // 第二种写法：props值为布尔值，布尔值为true，则把路由收到的所有params参数通过props传给Detail组件
+  // props:true
+    
+  // 第三种写法：props值为函数，该函数返回的对象中每一组key-value都会通过props传给Detail组件
+    props(route) {
+      return {
+		id: route.query.id
+        title: route.query.title
+      }
+  	}
+}
 ```
-
-开启命名空间后，组件中读取getters数据：
-
-```js
-// 方式一：自己直接读取
-this.$store.getters['personAbout/firstPersonName']
-
-// 方式二：借助mapGetters读取
-...mapGetters('CountAbout', ['bigSum'])
-```
-
-开启命名空间后，组件中调用dispatch
-
-```js
-// 方式一：自己直接dispatch
-this.$store.dispatch('personAbout/addPerson', person)
-
-// 方法二：借助mapActions
-...mapActions('countAbout', ['bigSum'])
-```
-
-开启命名空间后，组件中调用commit
-
-```js
-// 方式一：自己直接commit
-this.$store.commit('personAbout/addPerson', person)
-
-// 方式二：借助mapMutations
-...mapMutations('countAbout', {increament: 'JIA', decrement: 'JIAN'})
-```
-
-
-
-
-
-
 
 
 
