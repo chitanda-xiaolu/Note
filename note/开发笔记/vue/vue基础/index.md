@@ -1144,7 +1144,14 @@ $router单页应用的所有路由
 
 **带参数的动态路由匹配**
 
-当我们需要将给定匹配模式的路由映射到同一个组件。可以使用带参路由。例如我们有一个user组件，它应该对所有用户进行渲染，但用户ID不同。在Vue Router中
+当我们需要将给定匹配模式的路由映射到同一个组件。可以使用带参路由。例如我们有一个user组件，它应该对所有用户进行渲染，但用户ID不同。在Vue Router中，我们可以在路径中使用一个动态字段来实现，我们称之为路径参数，路径参数用:表示，可以在组件中通过this.$route.params访问路径参数。
+
+| 匹配模式                          | 匹配路径                    | $route.params                          |
+| ----------------------------- | ----------------------- | -------------------------------------- |
+| /users/:username              | /user/eduardo           | { username: 'eduardo' }                |
+| /user/:username/posts/:postid | /users/eduardo/post/123 | { username: 'eduardo', postId: '123' } |
+
+
 
 + query传参
 
@@ -1261,14 +1268,94 @@ $router单页应用的所有路由
 }
 ```
 
++ 缓存路由组件keep-alive
 
+  keep-alive是vue内置的一个组件，如果你希望一些组件不被反复的被渲染刷新，就可以使用`<keep-alive></keep-alive>`将组件包裹起来，被包裹起来的组件会`被缓存`起来，保存这个组件的状态，当你再次访问该组件，会直接从缓存中读取内容，该组件不会被重新渲染。
 
+  ```html
+  // keepalive包含的组件会被进行缓存
+  <keep-alive>
+  	<component />
+  </keep-alive>
+  ```
 
+  keep-alive标签的相关属性
 
+  - include：包含组件
+  - exclude：排除组件
+  - max：缓存组件最大值
 
+  ```html
+  <!--只缓存组件name为a或b的组件-->
+  <keep-alive include="a,b">
+    <component :is="currentView">
+  </keep-alive>
+    
+  <!--组件名为c的组件不缓存-->
+  <keep-alive exclude="c">
+    <component :is="currentView">
+  </keep-alive>
+    
+  <!--如果同时使用include,exclude，那么exclude优先于include,下面的路例子也就是只缓存a-->
+  <keep-alive include="a,b" exclude="b">
+    <component :is="currentView">
+  </keep-alive>
+    
+  <!--如果缓存的组件超过了max设定的值5，那么将删除第一个缓存的组件-->
+  <keep-alive exclude="c" max="5">
+    <component :is="currentView">
+  </keep-alive>
+  ```
 
+  使用keep-alive可以将所有路径匹配到的路由组件都缓存起来，包括路由组件里面的组件。
 
+  ```html
+  <keep-alive>
+    <router-view />
+  </keep-alive>
+  ```
 
+  也可以实现对部分路由的缓存
 
+  1. 通过在meta属性中添加keepalive属性实现
+
+  ```js
+  {
+    path: 'login',
+    name: 'login',
+    meta: {
+        keepAlive: false //设置不缓存
+    }
+  }，
+  {
+    path: '/argu',
+    name: 'argu',
+    component: () => import('@/views/argu.vue'),
+    meta: {
+    	keepAlive: true //设置缓存    
+    }
+  }
+  ```
+
+  2. 在app.vue中设置
+
+  通过$route来获取meta中的keepAlive属性进而判断是否缓存。
+
+  ```html
+  <template>
+    <div id="app">
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
+    </div>
+  </template>
+  ```
+
+  3. 当组件被包裹在keep-alive组件中时，会多出两个钩子函数：activated()和deactivated()
+
+     + activated()：这个钩子函数在组件中第一次渲染的时候被调用，之后在每次缓存组件被激活的时候调用。
+
+     ​
 
 
