@@ -791,9 +791,10 @@ export default {
 
 1. 一种组件间通信的方式，适用于任意组件间通信。
 
-2. 配置全局事件总线：
+2. 配置全局事件总线，在main.js下进行如下配置：
 
    ```js
+   //  在创建vue实例的时候安装全局事件总线。
    new Vue({
      ......
      beforeCreate() {
@@ -804,19 +805,22 @@ export default {
 
 3. 使用事件总线：
 
-   + 接收数据：A组件想接收数据，则在A组件中给$bus绑定自定义事件，事件的回调函数留在A组件自身。（接收数据的组件绑定总线事件）
+   + 接收数据：A组件想接收数据，则在A组件中给$bus绑定自定义事件，事件的回调函数留在A组件自身。（简单来说就是哪个组件接收数据，就由哪个组件来绑定自定义事件）
 
      ```js
      methods() {
-       demo(data) {.....}
+       // 定义接收参数的回调函数
+       demo(data) {
+         console.log(`我是组件A，收到了数据，数据是${data}`)
+       }
      }
      .....
      mounted() {
-       this.$bus.$on('xxxx', this.demo)
+       this.$bus.$on('自定义事件名称', this.demo)
      }
      ```
 
-   + 提供数据（发送数据的组件触发总线事件）：this.\$bus.\$emit('xxxx', 数据)
+   + 提供数据（发送数据的组件触发总线事件）：this.\$bus.\$emit('自定义事件名称', 数据）。
 
 4. 最好在beforeDestroy钩子中，用$off去解绑当前组件所用到的时间。
 
@@ -902,7 +906,7 @@ export default {
 
   #### 插槽
 
-  1. 作用：让父组件可以向组件指定位置插图html结构，也是一种组件间的通信方法，适用于父组件===>子组件
+  1. 作用：让父组件可以向组件指定位置插入html结构，也是一种组件间的通信方法，适用于父组件===>子组件
 
   2. 分类：默认插槽、具名插槽、作用域插槽
 
@@ -911,11 +915,12 @@ export default {
      + 默认插槽
 
        ```html
-       父组件中：
+       <!-- 父组件中： -->
        <Category>
+         <!-- <div>html结构</div>会被插入子组件中 -->
          <div>html结构</div>
        </Category>
-       子组件中(Category)：
+       <!-- 子组件中(Category)： -->
        <template>
          <!--定义插槽-->
          <slot>插槽默认内容</slot>
@@ -997,8 +1002,8 @@ export default {
   ​
 
   + State用于存放全局data
-  + Getters相当于组件间可以共享的
-  + Mutation用于修改全局data，有Commit触发，无法进行异步操作
+  + Getters相当于组件间可以共享的计算属性
+  + Mutation用于修改全局data，由Commit触发，无法进行异步操作
   + Action无法直接修改全局data，由dispatch触发，可进行异步操作
 
   **四个map方法的使用**
