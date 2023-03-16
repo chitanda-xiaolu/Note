@@ -94,7 +94,7 @@
 
 #### computed和watch区别
 **1. 计算属性computed**
-```
+```js
   支持缓存，只有依赖数据发生改变，才会重新进行计算；
   不支持异步，当 computed 内有异步操作时无效，无法监听数据的变化；
   computed 属性值会默认走缓存，计算属性是基于它们的响应式依赖进行缓存的。也就是基于 data 中声明过或者父组件传递的 props 中的数据通过计算得到的值；
@@ -1291,7 +1291,7 @@ $router单页应用的所有路由
   - max：缓存组件最大值
 
   ```html
-  <!--只缓存组件name为a或b的组件-->
+  <!--只缓存组件name为a或b的组件,a和b为组件名-->
   <keep-alive include="a,b">
     <component :is="currentView">
   </keep-alive>
@@ -1315,7 +1315,7 @@ $router单页应用的所有路由
   使用keep-alive可以将所有路径匹配到的路由组件都缓存起来，包括路由组件里面的组件。
 
   ```html
-  <keep-alive>
+  <keep-alive :include=[a,b]>
     <router-view />
   </keep-alive>
   ```
@@ -1357,10 +1357,99 @@ $router单页应用的所有路由
   </template>
   ```
 
-  3. 当组件被包裹在keep-alive组件中时，会多出两个钩子函数：activated()和deactivated()
++ 路由组件所独有的两个钩子，用于捕获路由组件的激活状态
 
-     + activated()：这个钩子函数在组件中第一次渲染的时候被调用，之后在每次缓存组件被激活的时候调用。
+  1. activated路由组件被激活时触发(即切换到该路由对应的组件时触发)
+  2. deactivated路由组件失活时触发
 
-     ​
++ 全局路由守卫
+
+  **全局前置守卫router.beforEach**，进入目标路由前触发
+
+  可以在router/index.js中使用router.beforEach注册一个全局前置路由守卫：
+
+  ```js
+  const router = createRouter({ ... })
+
+  router.beforeEach((to, from, next) => {
+    // ...
+    // 返回 false 以取消导航
+    return false
+  })
+  ```
+
+  ```to```:将要进入的目标路由组件
+
+  ```from```:当前导航将要离开的路由，即当前路由
+
+  ```next``` ：是个函数，在路由守卫中调用next()时才会跳转至目标路由to
+
+  可以利用全局前置守卫做权限验证
+
+  ```js
+  router.beforeEach((to, from, next) => {
+    if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+    else next()
+  })
+  ```
+
+  **全局后置路由守卫router.afterEach**，进入目标路由之后触发
+
+  ```js
+  router.afterEach((to, from) => {
+    sendToAnalytics(to.fullPath)
+  })
+  ```
+
+  ```to```:将要进入的目标路由组件
+
+  ```from```:当前导航将要离开的路由，即当前路由
+
+  它们对于分析、更改页面标题、声明页面等辅助功能以及许多其他事情都很有用。
 
 
+  **路由独享守卫berforeEnter**
+
+  ```js
+  const routes = [
+    {
+      path: '/users/:id',
+      component: UserDetails,
+      beforeEnter: (to, from) => {
+        // reject the navigation
+        return false
+      },
+    },
+  ]
+  ```
+
+  beforeEnter只有进入路由时才触发(如上例的/users/:id)，不会在 `params`、`query` 或 `hash` 改变时触发。例如，从 `/users/2` 进入到 `/users/3` 或者从 `/users/2#info` 进入到 `/users/2#projects`。它们只有在 **从一个不同的** 路由导航时，才会被触发。
+
+  **组件内的路由守卫**
+
+  -  `beforeRouteEnter`
+  - `beforeRouteUpdate`
+  - `beforeRouteLeave`
+
+  ```js
+  const UserDetails = {
+    template: `...`,
+    beforeRouteEnter(to, from) {
+      // 在渲染该组件的对应路由被验证前调用
+      // 不能获取组件实例 `this` ！
+      // 因为当守卫执行时，组件实例还没被创建！
+    },
+    beforeRouteUpdate(to, from) {
+      // 在当前路由改变，但是该组件被复用时调用
+      // 举例来说，对于一个带有动态参数的路径 `/users/:id`，在 `/users/1` 和 `/users/2` 之间跳转的时候，
+      // 由于会渲染同样的 `UserDetails` 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+      // 因为在这种情况发生的时候，组件已经挂载好了，导航守卫可以访问组件实例 `this`
+    },
+    beforeRouteLeave(to, from) {
+      // 在导航离开渲染该组件的对应路由时调用
+      // 与 `beforeRouteUpdate` 一样，它可以访问组件实例 `this`
+    },
+  }
+  ```
+
+  ​
