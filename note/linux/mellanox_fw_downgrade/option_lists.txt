@@ -1,0 +1,4 @@
+ID:1  IB-MCX556A-ECAT  18  /dev/mst/mt4119_pciconf0
+ID:2  NIC-MCX631102AN-ADAT  3b  /dev/mst/mt4127_pciconf0
+ID:3  NIC-MCX515A-CCAT  86  /dev/mst/mt4119_pciconf1
+ID:4  NIC-MCX4121A-B-10Gb  af  /dev/mst/mt4117_pciconf0

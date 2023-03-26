@@ -595,6 +595,7 @@ cd is a shell builtin
   -d 判断filename是否为目录
   -b 判断filename是否为block device装置
   -c 判断filename是否为character device装置
+  -z 字符串为空时返回真
   -S 判断filename是否为Socket文件
   -p 判断filename是否为FIFO(pipe)文件
   -L 判断filename是否为一个连结档
@@ -606,25 +607,26 @@ cd is a shell builtin
   -g 判断filename是否具有SGID属性
   -k 判断filename是否具有Sticky bit属性
   -s 判断filename是否为空白文件
+  ```
 
 
-  2. 文件之间进行比较：test file1 操作符 file2，有如下操作符
-  -nt(new then) 判断file1是否比file2新
-  -ot(old then) 判断file1是否比file2旧
-  -ef 判断file1与file2是否为同一个文件，可用判断hard link的判断定上。主要意义在判定两个文件石头指向同一个inode
+    2. 文件之间进行比较：test file1 操作符 file2，有如下操作符
+      -nt(new then) 判断file1是否比file2新
+        -ot(old then) 判断file1是否比file2旧
+        -ef 判断file1与file2是否为同一个文件，可用判断hard link的判断定上。主要意义在判定两个文件石头指向同一个inode
 
-  3. 两个整数之间的比较
-  -eq 两数值是否相等
-  -ne 不等于
-  -gt 大于
-  -lt 小于
-  -ge 大于等于
-  -le 小于等于
+    3. 两个整数之间的比较
+      -eq 两数值是否相等
+        -ne 不等于
+        -gt 大于
+        -lt 小于
+        -ge 大于等于
+        -le 小于等于
 
 
-  4. 判断字符串数据
-  test -z string 若字符串为空字符串，返回true
-  test -n string 若字符串为空字符串，返回false
+    4. 判断字符串数据
+      test -z string 若字符串为空字符串，返回true
+        test -n string 若字符串为空字符串，返回false
 
   ```
 

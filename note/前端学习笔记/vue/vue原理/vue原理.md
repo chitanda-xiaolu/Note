@@ -4,7 +4,7 @@
 数据驱动视图(MVVM, setState) ----- Vue React
 
 + 传统组件，只是静态渲染，更新还是要依赖操作DOM
-+ 
++ MVVM是数据
 
 ### Vue响应式
 原理：vue采用数据劫持结合发布者-订阅者模式的方式 来实现数据的响应式，在getter中收集依赖，在setter中触发依赖。
@@ -15,7 +15,7 @@ vue2通过Object.defineProperty来劫持数据的setter，getter。获取属性�
 
 **Object.defineProperty的缺点**
 + 1. 只能劫持对象的属性，因此我们需要对每个对象的每个属性进行遍历，如果属性值也是对象就会需要深度遍历，数据量大时，大量
-递归会导致调用栈溢出。(深度监听，需要递归到底，异性计算量大)
+    递归会导致调用栈溢出。(深度监听，需要递归到底，异性计算量大)
 
 + 2. 不能监听对象新增的属性和删除属性。（需要使用Vue.set Vue.delete进行操作）
 
@@ -37,7 +37,7 @@ https://juejin.cn/post/6844904067727097864
 
 ![avatar](https://upload-images.jianshu.io/upload_images/20308335-f755c3754fdfdff5.png?imageMogr2/auto-orient/strip|imageView2/2/format/webp)
 + Vue数据双向绑定是通过采用**数据劫持**结合**发布者**-**订阅者**的方式来实现的。通过Object.defineProperty()来劫持各个属性的setter, getter。
-修改触发set方法赋值，获取触发get方法取值，在数据变动时发布消息给订阅者，触发相应的回调通过数据劫持发布信息。
+  修改触发set方法赋值，获取触发get方法取值，在数据变动时发布消息给订阅者，触发相应的回调通过数据劫持发布信息。
 
 Vue主要通过以下4个步骤来实现数据双向绑定的：
 

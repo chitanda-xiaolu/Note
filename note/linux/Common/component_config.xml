@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<h3c_manifest>
+    <meta>
+        <product>
+            <product_version>
+                <name>
+                    <name_xlate lang="en">Common_toshiba-MG08ACA16TE_FW_Redhat</name_xlate>
+                    <name_xlate lang="cn">Common_toshiba-MG08ACA16TE_FW_Redhat</name_xlate>
+                </name>
+                <version value="4305"/>
+                <filename>Common_toshiba-MG08ACA16TE_FW_Redhat_4305_Linux.run</filename>
+                <languages>
+                    <languages_xlate lang="en">English (US), Chinese (Simplified)</languages_xlate>
+                    <languages_xlate lang="cn">英语（美国）, 简体中文</languages_xlate>
+                </languages>
+                <release_date year="2023" month="3" day="1" hour="19" minute="20" second="56" timezone="Asia/Shanghai"/>
+                <description>
+                    <description_xlate lang="en">Storage:Common_toshiba-MG08ACA16TE_FW_Redhat</description_xlate>
+                    <description_xlate lang="cn">Storage:Common_toshiba-MG08ACA16TE_FW_Redhat</description_xlate>
+                </description>
+                <dependents>
+                    <node></node>
+                </dependents>
+                <upgrade_requirement value="recommended"/>
+                <sw_keys>
+                    <sw_keys_and>
+                        <sw_key name="Common_toshiba-MG08ACA16TE_FW_Redhat_4305_Linux.run">
+                            <sw_key_expectedpath>firmware:exe</sw_key_expectedpath>
+                        </sw_key>
+                    </sw_keys_and>
+                </sw_keys>
+                <prerequisites>
+                    <supported_operating_systems>
+                        <supported_operating_system platform="64" major="0" minor="0" sr="OEM" name="CentOS Linux release 8.2.2004 (Core)"/>
+                        <supported_operating_system platform="64" major="0" minor="0" sr="OEM" name="CentOS Linux release 8.3.2011"/>
+                        <supported_operating_system platform="64" major="0" minor="0" sr="OEM" name="Red Hat Enterprise Linux release 9.0 (Plow)"/>
+                        <supported_operating_system platform="64" major="0" minor="0" sr="OEM" name="Red Hat Enterprise Linux release 8.3 (Ootpa)"/>
+                        <supported_operating_system platform="64" major="0" minor="0" sr="OEM" name="Red Hat Enterprise Linux release 8.2 (Ootpa)"/>
+                    </supported_operating_systems>
+                </prerequisites>
+                <installation>
+                    <install>
+                        <reboot_required value="yes"/>
+                    </install>
+                    <install_channel>Agent</install_channel>
+                    <install_mode>online</install_mode>
+                </installation>
+                <files>
+                    <file>
+                        <name>Common_toshiba-MG08ACA16TE_FW_Redhat_4305_Linux.run</name>
+                    </file>
+                </files>
+            </product_version>
+        </product>
+    </meta>
+</h3c_manifest>

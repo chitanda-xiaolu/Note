@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+
+# Default variables {{{
+
+LOGGER_DATE_FORMAT=${LOGGER_DATE_FORMAT:-'%Y/%m/%d %H:%M:%S'}
+LOGGER_LEVEL=${LOGGER_LEVEL:-0} # 0: debug, 1: info, 2: notice, 3: warning, 4: error
+LOGGER_STDERR_LEVEL=${LOGGER_STDERR_LEVEL:-5}
+LOGGER_DEBUG_COLOR=${LOGGER_INFO_COLOR:-"3"}
+LOGGER_INFO_COLOR=${LOGGER_INFO_COLOR:-""}
+LOGGER_NOTICE_COLOR=${LOGGER_INFO_COLOR:-"36"}
+LOGGER_WARNING_COLOR=${LOGGER_INFO_COLOR:-"33"}
+LOGGER_ERROR_COLOR=${LOGGER_INFO_COLOR:-"31"}
+LOGGER_COLOR=${LOGGER_COLOR:-always}
+LOGGER_COLORS=("$LOGGER_DEBUG_COLOR" "$LOGGER_INFO_COLOR" "$LOGGER_NOTICE_COLOR" "$LOGGER_WARNING_COLOR" "$LOGGER_ERROR_COLOR")
+if [ "${LOGGER_LEVELS}" = "" ]; then
+  LOGGER_LEVELS=("DEBUG" "INFO" "NOTICE" "WARNING" "ERROR")
+fi
+LOGGER_SHOW_TIME=${LOGGER_SHOW_TIME:-1}
+LOGGER_SHOW_FILE=${LOGGER_SHOW_FILE:-1}
+LOGGER_SHOW_LEVEL=${LOGGER_SHOW_LEVEL:-1}
+LOGGER_ERROR_RETURN_CODE=${LOGGER_ERROR_RETURN_CODE:-100}
+LOGGER_ERROR_TRACE=${LOGGER_ERROR_TRACE:-1}
+LOGGER_FILE=
+AUX_LOGGER=
+aux_printf=${aux_printf:-true}
+# }}}
+
+# Other global variables {{{
+_LOGGER_WRAP=0
+#}}}
+
+# Functions {{{
+
+_get_level() {
+  if [ $# -eq 0 ]; then
+    local level=1
+  else
+    local level=$1
+  fi
+  if ! expr "$level" : '[0-9]*' >/dev/null; then
+    local i=0
+    while [ $i -lt ${#LOGGER_LEVELS[@]} ]; do
+      if [ "$level" = "${LOGGER_LEVELS[$i]}" ]; then
+        level=$i
+        break
+      fi
+      ((i++))
+    done
+  fi
+  echo $level
+}
+
+_logger_level() {
+  [ "$LOGGER_SHOW_LEVEL" -ne 1 ] && return
+  if [ $# -eq 1 ]; then
+    local level=$1
+  else
+    local level=1
+  fi
+  printf "[%s]" "${LOGGER_LEVELS[$level]}"
+}
+
+_logger_time() {
+  [ "$LOGGER_SHOW_TIME" -ne 1 ] && return
+  printf "[%s]" "$(date +"$LOGGER_DATE_FORMAT")"
+}
+
+_logger_file() {
+  [ "$LOGGER_SHOW_FILE" -ne 1 ] && return
+  local i=0
+  if [ $# -ne 0 ]; then
+    i=$1
+  fi
+  if [ -n "$BASH_VERSION" ]; then
+    printf "[%s:%s]" "$(basename "${BASH_SOURCE[$((i + 1))]}")" "${BASH_LINENO[$i]}"
+  fi
+}
+
+_logger() {
+  ((_LOGGER_WRAP++))
+  local wrap=${_LOGGER_WRAP}
+  _LOGGER_WRAP=0
+  if [ $# -eq 0 ]; then
+    return
+  fi
+  if [ "$1" = 'aux' ]; then
+    local aux_flag='true'
+    shift
+  fi
+  local level="$1"
+  shift
+  if [ "$level" -lt "$(_get_level "$LOGGER_LEVEL")" ]; then
+    return
+  fi
+  local msg
+  if [ "$aux_flag" = true ]; then
+    msg="$(_logger_time)$(_logger_file "$wrap")$(_logger_level "$level") $*"
+    msg=${msg//%/%%}
+    if [ -f "$AUX_LOGGER" ]; then
+      eval "printf \"\\e[${LOGGER_COLORS[$level]}m$msg\\e[m\\n\"" >>"$AUX_LOGGER"
+    else
+      eval "printf \"\\e[${LOGGER_COLORS[$level]}m$msg\\e[m\\n\""
+    fi
+  else
+    msg="$(_logger_time)$(_logger_file "$wrap")$(_logger_level "$level")(${FUNCNAME[*]:3}) $*"
+    msg=${msg//%/%%}
+    if [ -f "$LOGGER_FILE" ]; then
+      eval "printf \"\\e[${LOGGER_COLORS[$level]}m$msg\\e[m\\n\"" >>"$LOGGER_FILE"
+    else
+      eval "printf \"\\e[${LOGGER_COLORS[$level]}m$msg\\e[m\\n\""
+    fi
+  fi
+}
+
+logger_debug() {
+  ((_LOGGER_WRAP++))
+  _logger 0 "$*"
+}
+
+logger_information() {
+  ((_LOGGER_WRAP++))
+  _logger 1 "$*"
+}
+logger_info() {
+  ((_LOGGER_WRAP++))
+  logger_information "$*"
+}
+
+logger_notification() {
+  ((_LOGGER_WRAP++))
+  _logger 2 "$*"
+}
+logger_notice() {
+  ((_LOGGER_WRAP++))
+  logger_notification "$*"
+}
+
+logger_warning() {
+  ((_LOGGER_WRAP++))
+  _logger 3 "$*"
+}
+logger_warn() {
+  ((_LOGGER_WRAP++))
+  logger_warning "$*"
+}
+logger_error() {
+  ((_LOGGER_WRAP++))
+  _logger 4 "$*"
+}
+logger_err() {
+  ((_LOGGER_WRAP++))
+  logger_error "$*"
+}
+logger_aux() {
+  [ "$aux_printf" = 'true' ] || return 
+  ((_LOGGER_WRAP++))
+  _logger 'aux' 1 "$*"
+}
+logger_tipinfo() {
+    echo "$*" > "/home/tipinfo.log"
+}

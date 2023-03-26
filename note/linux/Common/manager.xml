@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package version="1.0.0.0">
+    <filename>toshiba-MG08ACA16TE FW for Linux</filename>
+    <!-- 安装包版本号 -->
+    <version value="4305"/>
+    <name>
+        <!--软件的名称信息-->
+        <name_xlate lang="en">toshiba-MG08ACA16TE FW for Linux</name_xlate>
+    </name>
+    <prerequisites>
+        <!-- 安装包支持的操作系统，Driver使用，与下方component_support_system保持一致， 版本使用winver命令获取 -->
+        <supported_operating_systems>
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="4.18.0-193.el8.x86_64" name="Red Hat Enterprise Linux release 8.2 (Ootpa)"/>
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="4.18.0-193.el8.x86_64" name="CentOS Linux release 8.2.2004 (Core)"/>            
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="4.18.0-240.el8.x86_64" name="Red Hat Enterprise Linux release 8.3 (Ootpa)"/>
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="4.18.0-240.el8.x86_64" name="CentOS Linux release 8.3.2011"/>            
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="5.14.0-70.22.1.el9_0.x86_64" name="Red Hat Enterprise Linux release 9.0 (Plow)"/>
+        </supported_operating_systems>
+    <!-- 安装包支持的设备 -->
+    <!-- 硬件对应的device_id,可以对应多个-->
+    <!-- +++使用lspci -xxx -s bus号或者setpci -d bus号 2c.l可以获取+++-->
+    <supported_devices>
+    </supported_devices>
+    </prerequisites>
+    <dependents>
+    </dependents>
+    <!--辅助信息项-->
+    <auxiliary_term>
+        <!--硬件-->
+        <hardware_term command="contain" result="HARDWARE:TRUE" >
+            <command>chmod +x $start.sh; </command>
+            <command_params>$start.sh -h</command_params>
+        </hardware_term>
+        <!--版本号-->
+        <version_term command="regex" exp="=,*">
+            <command_params>$start.sh -v</command_params>
+        </version_term>
+        <!--升级操作-->
+        <updates_term>
+            <update command="contain" result="INSTALLED:TRUE">
+                <command_params>$start.sh -u</command_params>
+            </update>
+        </updates_term>
+        <reboot_required value="yes"/>
+    </auxiliary_term>
+    
+    <component_make>
+        <!-- 组件产品版本，用于拼接包名 -->
+        <component_product_gen></component_product_gen>
+        <!-- 组件适用的平台 windows 或 linux -->
+        <component_system_type>linux</component_system_type>
+        <!-- 组件的中文名，可与组件名保持一致 -->
+        <component_name_cn>Common_toshiba-MG08ACA16TE_FW_Redhat</component_name_cn>
+        <!-- 组件的英文名，可与组件名保持一致 -->
+        <component_name_en>Common_toshiba-MG08ACA16TE_FW_Redhat</component_name_en>
+        <!-- 组件版本 -->
+        <component_version>4305</component_version>
+        <!-- 组件的描述信息中文，无中文可以用英文，FIST显示使用 -->
+        <!-- 组件时间日期  新增老版本的包，内部的时间日期需比已有包老 更改新组件包不涉及版本变动时  时间日期不变 -->
+        <component_date>2023-03-01 19:13:20</component_date>
+        <component_model>MG08ACA16TE</component_model>
+        <component_description_cn>Storage:Common_toshiba-MG08ACA16TE_FW_Redhat</component_description_cn>
+        <!-- 组件的描述信息英文 -->
+        <component_description_en>Storage:Common_toshiba-MG08ACA16TE_FW_Redhat</component_description_en>
+        <!-- 组件依赖，请注意修改依赖的版本号 -->
+        <component_dependency></component_dependency>
+        <!-- 组件推荐指数，三选一：recommended，optional，critical -->
+        <component_recommend>recommended</component_recommend>
+        <!-- 组件类型，三选一：software，firmware，driver(暂不支持) -->
+        <component_type>firmware</component_type>
+        <!-- 组件是否重启生效，yes 或 no -->
+        <component_reboot>yes</component_reboot>
+        <!-- 组件支持安装方式，三选一：Agent，BMC和Agent,BMC -->
+        <component_install_channel>Agent</component_install_channel>
+        <!-- 组件安装的模式，是否关机部署，二选一：online，offline -->
+        <component_install_mode>online</component_install_mode>
+        <!-- 组件支持的系统 -->
+        <component_support_system>
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="4.18.0-193.el8.x86_64" name="Red Hat Enterprise Linux release 8.2 (Ootpa)"/>
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="4.18.0-193.el8.x86_64" name="CentOS Linux release 8.2.2004 (Core)"/>            
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="4.18.0-240.el8.x86_64" name="Red Hat Enterprise Linux release 8.3 (Ootpa)"/>
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="4.18.0-240.el8.x86_64" name="CentOS Linux release 8.3.2011"/>            
+            <supported_operating_system platform="64" major="0" minor="0" sr="OEM" release="5.14.0-70.22.1.el9_0.x86_64" name="Red Hat Enterprise Linux release 9.0 (Plow)"/>
+        </component_support_system>
+        <!-- 组件的html对外描述 -->
+        <component_html_description>Storage:Common_toshiba-MG08ACA16TE_FW_Redhat</component_html_description>
+        <!-- 组件支持的产品，用|分隔 -->
+        <component_product></component_product>
+        <!-- 组件产品交付件 -->
+        <component_product_deliverable>Storage:toshiba-MG08ACA16TE</component_product_deliverable>
+        <!-- 组件支持的产品，小类 -->
+        <component_product_support>ALL</component_product_support>
+        <!-- 组件适用的产品或用户 三选一：production，user或production,user -->
+        <component_use>production,user</component_use>
+        <!-- 组件是否是定制化，非定制可不写，写定制化的客户大写缩写即可，如TC，BD，CMCC -->
+        <component_customer></component_customer>
+        <!-- 组件是否正式还是内部版本，如果不对外，请填写inside或outside，默认不写为outside -->
+        <component_inorout></component_inorout>
+    </component_make>
+</package>
